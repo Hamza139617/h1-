@@ -1,224 +1,161 @@
-#pragma once
+/*
+Name:
+Roll Number:
+Setion:
+*/
 
+#pragma once
 #include <iostream>
 using namespace std;
 
-// question 1
+//---------------- SHAPESHIFTER -----------------
+int*** CreateViews(int* data, int size, int& num_views) {
+    
+    // finding the value of num_views 
 
-//int countRepeatedLetters(char* word) {
-//
-//	
-//	int wordChecker = 0;
-//	int maxRepeated = 0;
-//
-//	char* w = nullptr;
-//
-//	while ( *(word + wordChecker ) != '\0') {
-//
-//		if ( *(word + wordChecker) == ' ') {
-//			
-//			static int indexStart = 0;
-//			int repeat = 0;
-//			int wordSize = wordChecker - indexStart;
-//
-//			// char* w = new char[wordSize];
-//			
-//			for (int i = indexStart ; i < wordSize; i++) {
-//				
-//				char letter = *(word + i);
-//
-//				for (int j = i + 1 ; j < wordSize ; j++) {
-//
-//					if (letter == *(word + j)) {
-//						repeat++;
-//						break;
-//					}
-//
-//				}
-//
-//			}
-//
-//
-//			if (maxRepeated < repeat) {
-//				maxRepeated = repeat;
-//
-//				if (w != nullptr) {
-//					delete[] w; 
-//				}
-//
-//				w = new char[wordSize];
-//				
-//
-//
-//				for (int i = indexStart; i < wordSize; i++) {
-//
-//					*(w + i) = *(word + i);
-//
-//				}
-//
-//			}
-//			repeat = 0;
-//
-//			indexStart = wordChecker + 1;
-//		}
-//		
-//
-//		wordChecker++;
-//	}
-//
-//	return maxRepeated;
-//}
+    int i = 1;
+
+    while (i <= size) {
+
+        if (size % i == 0) {
+            num_views++;
+
+        }
+        i++;
+
+    }
+
+    // creating views 
+
+    int*** views = new int** [num_views];
+    int view = 0; // for presenting the view 
+
+    for (i = 1; i < size; i++) {
+
+        if (size % i == 0) {
+
+            int rows = i;
+            int cols = size / rows;
+
+            
+                *(views + view) = new int* [rows];
+
+            
+
+            for (int j = 0; j < rows; j++) {  // for creating the number of columns in each row 
+                *(*(views + view) + j) = new int[cols];
+
+            }
+
+            // for making each row point to the data address 
+
+            for (int j = 0; j <= size; j += cols) {
+                *(*(views + view) + j) = (data + j);
+            }
+
+            
 
 
-// question3 
-char* calculateGrades(int arr[], int size) {
-	char* arr1 = new char[size];
+            view++;
 
-	for (int i = 0; i < size; i++) {
+        }
 
-		if (arr[i] >= 91 && arr[i] <= 100) {
-			*(arr1 + i) = 'A';
-		}
-		else if (arr[i] >= 76 && arr[i] <= 90) {
-			*(arr1 + i) = 'B';
-		}
-		else if (arr[i] >= 60 && arr[i] <= 75) {
-			*(arr1 + i) = 'C';
-		}
-		else if (arr[i] >= 51 && arr[i] <= 59) {
-			*(arr1 + i) = 'D';
-		}
-		else {
-			*(arr1 + i) = 'F';
-		}
-
-	}
-
-	return arr1;
-
+    }
+    
+    
+    
+    return views ;
 }
 
-// question4 
-
-int* sortArray(int* arr, int size) {
-	int count = 0;
-	int evenS;
-
-	int min = *arr;
-
-	for (int i = 0; i < size; i++) {
-		
-		if (min > *(arr + i))
-			min = *(arr + i);
-
-	}
-
-	min = min - 1;
-
-	for (int i = 0; i < size; i++) {
-
-		if (*(arr + i) % 2 == 0) {
-			count++;
-		}
-
-	}
-
-	int* evenArr = new int[count];
-
-	evenS = count;
-	count = 0;
-
-	for (int i = 0; i < size; i++) {
-		if (*(arr + i) % 2 == 0) {
-
-			*(evenArr + count) = *(arr + i);
-			*(arr + i) = min;
-
-			count++;
-
-		}
-	}
-
-	int* arr2 = new int[size];
-
-	for (int i = 0; i < size; i++) {
-		*(arr2 + i) = 0;
-	}
-
-	// sorting for odd
-
-	for (int i = 0; i < size; i++) {
-		for (int j = i + 1; j < size; j++) {
-
-			if (*(arr + j) < *(arr + i)) {
-				int temp = *(arr + i);
-				*(arr + i) = *(arr + j);
-				*(arr + j) = temp;
-			}
-
-		}
-	}
-
-	for (int i = 0, j = 0 ; j < size; ) {
-
-		if (*(arr + i) > min) {
-			*(arr2 + j) = *(arr + i);
-			j++;
-		}
-
-		if (i == size) {
-			*(arr2 + j) = 0;
-			j++;
-		}
-
-		if (i < size) {
-			i++;
-		}
-
-	}
-
-	for (int i = 0; i < evenS; i++) {
-		for (int j = i + 1; j < evenS; j++) {
-
-			if (*(evenArr + j) < *(evenArr + i)) {
-				int temp = *(evenArr + i);
-				*(evenArr + i) = *(evenArr + j);
-				*(evenArr + j) = temp;
-			}
-
-		}
-	}
-
-	for (int i = 0 , j = 0 ; i < size ; i++) {
-
-		if (*(arr2 + i) == min) {
-			
-			(*(arr2 + i)) = (*(evenArr + j));
-		
-			j++;
-			
-		}
-
-	}
-	
-
-
-	for (int i = 0; i < size; i++) {
-		cout << *(arr2 + i) << " ";
-	}
-
-	cout << endl;
-	
-	
-
-	delete[] evenArr;
-	evenArr = nullptr;
-	
-	
-
-	return arr2;
+//---------------- String Engine ----------------
+int getLength(const char* str) {
+    return 0;
 }
 
-// question5
+char* copyString(const char* str) {
+    return nullptr;
+}
 
-//int maximizeSumWithKDistinct(int* arr, int size, int k);
+bool areEqual(const char* str1, const char* str2) {
+    return false;
+}
+
+char* concatenate(const char* str1, const char* str2) {
+    return nullptr;
+}
+
+void toUpperCase(char* str) {
+}
+
+void toLowerCase(char* str) {
+}
+
+int findFirstOccurrence(const char* str, char c) {
+    return 0;
+}
+
+int findSubstring(const char* str, const char* sub) {
+    return 0;
+}
+
+void reverseString(char* str) {
+}
+
+void removeCharacter(char* str, char c) {
+}
+
+char* substring(const char* str, int start, int length) {
+    return nullptr;
+}
+
+void replaceChar(char* str, char oldChar, char newChar) {
+}
+
+char* replaceSubstring(const char* str, const char* oldSub, const char* newSub) {
+    return nullptr;
+}
+
+char* insertAt(const char* str, const char* sub, int pos) {
+    return nullptr;
+}
+
+void deleteRange(char* str, int start, int length) {
+}
+
+char* compress(const char* str) {
+    return nullptr;
+}
+
+char* decompress(const char* str) {
+    return nullptr;
+}
+
+void rotateString(char* str, int k) {
+}
+
+//---------------- Recurion patterns -----------------
+void printDiamond(int size, char c1, char c2) {
+}
+
+void renderGrid(int r, int size) {
+}
+
+//------------ Mystery Of Severance -----------
+bool** refineSignal(const char* input, int& count, int*& sizes) {
+    return nullptr;
+}
+
+long long computeChecksum(bool** cluster, int* sizes, int count, int threshold) {
+    return 0;
+}
+
+void destroyCluster(bool** cluster, int* sizes, int count) {
+}
+
+//---------------- VOID WALKER -----------------
+void processStream(unsigned char* stream) {
+}
+
+float calculateNecroticPower(const unsigned char* data, int numUnits, int targetID) {
+    return 0.0f;
+}
