@@ -10,114 +10,437 @@ using namespace std;
 
 //---------------- SHAPESHIFTER -----------------
 int*** CreateViews(int* data, int size, int& num_views) {
+    num_views = 0;
     
-    // finding the value of num_views 
-
-    int i = 1;
-
-    while (i <= size) {
-
+    // count the number of num vies 
+    for (int i = 1; i <= size; i++) {
         if (size % i == 0) {
             num_views++;
-
         }
-        i++;
-
     }
 
-    // creating views 
-
+    // creation of the views 
+    // this is why needed we num_views 
     int*** views = new int** [num_views];
-    int view = 0; // for presenting the view 
 
-    for (i = 1; i < size; i++) {
+
+
+
+
+    int views_id = 0; // for traversing through the view 
+
+     // generation of the views 
+
+
+
+
+    for (int i = 1; i <= size; i++) {
+
 
         if (size % i == 0) {
 
+
             int rows = i;
-            int cols = size / rows;
 
-            
-                *(views + view) = new int* [rows];
 
-            
+            int cols = size / rows ;
 
-            for (int j = 0; j < rows; j++) {  // for creating the number of columns in each row 
-                *(*(views + view) + j) = new int[cols];
 
+
+// creation of the rows over here 
+
+
+
+            *(views + views_id) = new int* [rows];
+
+
+
+            for (int r = 0; r < rows; r++) {
+   *(*(views + views_id) + r) = (data + (r * cols));
             }
 
-            // for making each row point to the data address 
-
-            for (int j = 0; j <= size; j += cols) {
-                *(*(views + view) + j) = (data + j);
-            }
-
-            
 
 
-            view++;
+            views_id++;
+
+
 
         }
 
+
+
     }
-    
-    
-    
-    return views ;
+
+
+
+
+
+
+
+    return views;
 }
 
 //---------------- String Engine ----------------
 int getLength(const char* str) {
-    return 0;
+
+    int count = 0;
+
+    if (str == nullptr) return 0;
+
+    while (*(str + count) != '\0')
+        count++;
+
+    
+    return count;
 }
 
 char* copyString(const char* str) {
-    return nullptr;
+
+    int length = getLength(str);
+
+    
+
+    char* copy = new char[length+1];
+
+    
+
+    if (str == nullptr)
+        return nullptr;
+    
+    
+
+    int i;
+
+    for ( i = 0; i < length; i++)
+        *(copy + i) = *(str + i);
+
+    *(copy + i) = '\0';
+
+    return copy;
 }
 
 bool areEqual(const char* str1, const char* str2) {
-    return false;
+
+    if (getLength(str1) != getLength(str2)) return false;
+
+    for (int i = 0; i < getLength(str1); i++) {
+
+        if (*(str1 + i) != *(str2 + i))
+            return false;
+
+    }
+
+    if (str1 == nullptr) return false;
+
+    return true;
 }
 
 char* concatenate(const char* str1, const char* str2) {
-    return nullptr;
+    
+    int length = getLength(str1) + getLength(str2);
+    char* result = new char[length+1];
+
+    if (str1 == nullptr && str2 == nullptr) return nullptr;
+
+
+    int i;
+
+    for ( i = 0; i < length; i++) {
+        
+        if (i < getLength(str1)) {
+            *(result + i) = *(str1 + i);
+        }
+        else {
+            *(result + i) = *(str2 + (i - getLength(str1) ));
+        }
+
+    }
+
+    *(result + i) = '\0';
+
+    return result;
 }
 
 void toUpperCase(char* str) {
+
+    for (int i = 0; i < getLength(str); i++) {
+
+        if (*(str + i) > 90 && (*(str + i) >= 97 && *(str + i) <= 122 ) ) {
+
+            *(str + i) = *(str + i) - 32;
+
+        }
+        
+
+    }
+
 }
 
 void toLowerCase(char* str) {
+
+    for (int i = 0; i < getLength(str); i++) {
+
+        
+
+         if (*(str + i) < 97 && ( *(str+i) >= 65 && *(str + i) <= 90 ) ) {
+
+            *(str + i) = *(str + i) + 32;
+
+        }
+
+
+    }
+
 }
 
 int findFirstOccurrence(const char* str, char c) {
-    return 0;
+
+    for (int i = 0; i < getLength(str); i++) {
+        
+        if (*(str + i) == c)
+            return i;
+
+    }
+
+    return -1;
 }
 
 int findSubstring(const char* str, const char* sub) {
-    return 0;
+
+    bool same;
+
+    for (int i = 0; i < getLength(str); i++) {
+
+        same = true;
+
+        for (int j = 0; j < getLength(sub); j++) {
+
+            if (*(str + i + j ) != *(sub + j)) {
+                same = false;
+                break;
+            }
+
+        }
+
+        if (same == true)
+            return i;
+
+    }
+
+    return -1;
 }
 
 void reverseString(char* str) {
+
+    int mid = getLength(str) / 2;
+
+    for (int i = 0; i < mid; i++) {
+        char temp = *(str + i);
+        *(str + i) = *(str + (getLength(str) - i - 1));
+        *(str + (getLength(str) - i - 1)) = temp;
+        
+    }
+
 }
 
 void removeCharacter(char* str, char c) {
+
+    int length = getLength(str);
+
+    int ptr1 = 0, ptr2 = 0;
+    bool zeroEncountered = false;
+
+    
+
+    while (ptr2 < length) {
+
+        
+        if (*(str + ptr1) == c) {
+            zeroEncountered = true;
+        }
+
+        if (zeroEncountered) {
+
+            for (; ptr2 < length && *(str + ptr2) == c; ptr2++);
+                
+
+            *(str + ptr1) = *(str + ptr2);
+            *(str + ptr2) = c;
+         
+            
+        }
+
+        ptr1++;   
+        ptr2++;
+
+    }
+
+    // getLength function overhere but with l as the delimtere
+
+    int count = 0;
+
+    while (*(str + count) != c)
+        count++;
+
+    *(str + count) = '\0';
+
+
+
+
+
+
 }
 
 char* substring(const char* str, int start, int length) {
-    return nullptr;
+
+    char* result = new char[length + 1];
+
+    if (start > getLength(str)) return nullptr;
+
+    int j = 0;
+    for (int i = start; j < length; i++, j++) {
+
+        *(result + j) = *(str + i);
+
+    }
+
+    *(result + j) = '\0';
+
+    return result;
 }
 
 void replaceChar(char* str, char oldChar, char newChar) {
-}
 
-char* replaceSubstring(const char* str, const char* oldSub, const char* newSub) {
-    return nullptr;
+    for (int i = 0; i < getLength(str); i++) {
+
+        if (*(str + i) == oldChar)
+            *(str + i) = newChar;
+
+
+    }
+
 }
 
 char* insertAt(const char* str, const char* sub, int pos) {
+
+    int length = getLength(str) + getLength(sub);
+
+    bool positionReached = false;
+    bool subPrint = false;
+
+    char* string = new char[length + 1];
+
+    int i;
+
+    for (i = 0; i < length; i++) {
+
+        if (!(positionReached) && !(subPrint) && i != pos) {
+
+            *(string + i) = *(str + i);
+
+        }
+
+        if (i == pos || positionReached) {
+
+            *(string + i) = *(sub + (i - pos));
+            positionReached = true;
+        }
+
+        if (i - pos == getLength(sub) && positionReached) {
+            positionReached = false;
+            subPrint = true;
+        }
+
+        if (!(positionReached) && subPrint) {
+
+            *(string + i) = *(str + (i - getLength(sub)));
+
+        }
+
+
+    }
+
+    *(string + i) = '\0';
+
+    return string;
+}
+
+char* replaceSubstring(const char* str, const char* oldSub, const char* newSub) {
+    int i = 0;
+    int count = 0;
+
+   
+
+    while (findSubstring(str + i , oldSub) != -1) {
+        
+        
+            count++;
+            i += findSubstring(str + i, oldSub) + getLength(oldSub);
+    
+        
+
+
+    }
+
+    int length = getLength(str) - (getLength(oldSub) * count) + (getLength(newSub) * count) ;
+    char* string = new char[length + 1];
+
+    int* position = new int[count];
+
+  
+
+    int times = 0;
+    i = 0;
+
+    while (findSubstring(str + i, oldSub) != -1) {
+
+
+        *(position + times) = findSubstring(str + i, oldSub) + i;      
+
+        i += findSubstring(str + i, oldSub) + getLength(oldSub);
+
+        times++;
+        
+
+    }
+
+    bool newPlaced = false;
+
+    
+
+    for (int j = 0, pos = 0 ; j < length; j++) {
+
+        if (j != *(position + pos) && !(newPlaced) ) {
+
+            *(string + j) = *(str + j);
+
+        }
+        else if (j == *(position + pos)) {
+
+            for (int k = 0; k < getLength(newSub); k++) {
+                *(string + (j + k)) = *(newSub + k);
+            }
+
+            newPlaced = true;
+
+        }
+        else if (j != *(position + pos) && newPlaced) {
+
+            *(string + j + (pos * getLength(newSub))) = *(str + j + (pos * getLength(oldSub)));
+
+        }
+
+
+    }
+
+    
+    
+
+
     return nullptr;
 }
+
+
 
 void deleteRange(char* str, int start, int length) {
 }
