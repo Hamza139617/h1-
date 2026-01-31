@@ -1,65 +1,37 @@
 #include <iostream>
+#include <cmath>
 using namespace std;
-
-void printSpace(int size ) {
-    
-    if(!( size >  1 )) return;
-    
-    cout << " ";
-    
-    printSpace(size-1);
-    
-}
-
-void printCharacter(char c, int size, int size2 ) {
-    
-    if( size <= 0 ) return;
-    
-    if(size2 == 0 ) {
-        c = '-';
-        size2 == -1;
-    }else {
-        c = '+';
-        size2 = 0;
-    }
-    
-    cout << c;
-    printCharacter(c,size-1, size2);
-    
-}
-
-void printDiamond2(int size ) {
-    static int tSize = size * 2 - 1;
-    static int rSize = size;
-    int t ;
-    if(rSize % 2 == 0 ) t = 1;
-    else t = -1;
-    
-    if( size <= 0 ) return;
-    
-    printSpace(size); // the main character that is going to be printing is in the main 
-    // function which we are going to be using for pringting not this a 
-    // don't be confused by it
-    printCharacter('a', tSize - ((size - 1))*2, t);
-    
-    cout << endl;
-    printDiamond2(size-1) ;
-    
-    if(tSize - ((size - 1 ) * 2 ) == tSize) return;
-    
-        printSpace(size);
-    printCharacter('a', tSize - ((size - 1))*2, t);
-    cout << endl;
-}
-
-void printDiamond(int size, char c1, char c2) {
-
-    
-}
 
 int main() {
     
-    printDiamond2(4);
+    int rows = 7;
+    int t = 1 ;
+    
+    rows--;
+    
+    
+    for(int i = -rows ; i <= rows ; i++ ) {
+        for(int j = -rows ; j <= rows ; j++ ) {
+            
+            if(rows >= ((i < 0) ? -i : i) + ((j < 0) ? -j : j)) {
+                
+                if(t == 1) {
+                    cout << "#";
+                    t = -1;
+                }else {
+                    cout << "@";
+                    t = 1;
+                }
+                
+                
+            }else {
+                cout << " ";
+            }
+            
+        }
+        
+        cout << endl ;
+    }
     
     return 0;
 }
