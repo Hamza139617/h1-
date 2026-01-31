@@ -1,41 +1,76 @@
 #include <iostream>
-#include <cmath>
 using namespace std;
 
+void recursive2(int size1, char c1, char c2, int t, int size2 , int n) {
+    
+    if (size1 > t ) return;
+    
+    if(t >= ((size2 < 0)? -size2 : size2) + ((size1 < 0)? -size1: size1)) {
+        
+        if(n == 0 ) {
+            cout << c1;
+            n = 1;
+        } else {
+            cout << c2;
+            n = 0 ;
+        }
+        
+    }else {
+        cout << " ";
+    }
+    
+    size1++;
+    
+    recursive2(size1, c1, c2, t, size2, n);
+    
+    return;
+}
+
+void recursive1(int size, char c1, char c2, int t) {
+    
+    if(size > t ) return;
+    
+    int n = 0;
+    
+    recursive2(-t, c1, c2, t, size, n);
+    
+    cout << endl ;
+    size++;
+    
+    
+    
+    recursive1(size, c1, c2, t);
+    
+    
+}
+
+
 void printDiamond(int size, char c1, char c2) {
+
+    if(size % 2 == 0 ) {
+        
+        char temp ;
+        temp = c2 ;
+        c2 = c1;
+        c1 = temp;
+        
+    }
+    
+    size--;
+    int t = size;
+    
+    
+    
+    recursive1(-size,c1,c2,t);
+    
 }
 
 
 int main() {
     
-    int rows = 7;
-    int t = 1 ;
-    
-    rows--;
-    
-    
-    for(int i = -rows ; i <= rows ; i++ ) {
-        for(int j = -rows ; j <= rows ; j++ ) {
-            
-            if(rows >= ((i < 0) ? -i : i) + ((j < 0) ? -j : j)) {
-                
-                if(t == 1) {
-                    cout << "#";
-                    t = -1;
-                }else {
-                    cout << "@";
-                    t = 1;
-                }
-                
-                
-            }else {
-                cout << " ";
-            }
-            
-        }
-        
-        cout << endl ;
-    }
-    
+ int rows = 7;
+ 
+ printDiamond(rows,'+','-');
+ 
     return 0;
 }
