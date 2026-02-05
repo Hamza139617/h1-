@@ -1,76 +1,364 @@
 #include <iostream>
+#include <fstream>
 using namespace std;
 
-void recursive2(int size1, char c1, char c2, int t, int size2 , int n) {
-    
-    if (size1 > t ) return;
-    
-    if(t >= ((size2 < 0)? -size2 : size2) + ((size1 < 0)? -size1: size1)) {
-        
-        if(n == 0 ) {
-            cout << c1;
-            n = 1;
-        } else {
-            cout << c2;
-            n = 0 ;
-        }
-        
-    }else {
-        cout << " ";
-    }
-    
-    size1++;
-    
-    recursive2(size1, c1, c2, t, size2, n);
-    
-    return;
+void readFileContent(ifstream& file, int& Size) {
+	
+	char ch;
+
+	if (!(file.get(ch))) {
+		return;
+	}
+
+	Size++;
+
+	readFileContent(file, Size);
+
+
+
 }
 
-void recursive1(int size, char c1, char c2, int t) {
-    
-    if(size > t ) return;
-    
-    int n = 0;
-    
-    recursive2(-t, c1, c2, t, size, n);
-    
-    cout << endl ;
-    size++;
-    
-    
-    
-    recursive1(size, c1, c2, t);
-    
-    
+void readFileContent(ifstream& file, char* array, const int size, int& c) {
+
+	char ch;
+
+	if (!(file.get(ch))) {
+		
+		*(array + c) = '\0';
+
+		return;
+	}
+
+	*(array + c) = ch;
+
+	c++;
+
+	readFileContent( file, array, size, c);
+
+
+
 }
 
+void readFileNames(ifstream& file,char* sixseven, char* end, char* FAST, char* OOP, int& files, int& c,const int fastSize,const int oopSize,const int endSize,const int sixSize) {
 
-void printDiamond(int size, char c1, char c2) {
+	char ch;
 
-    if(size % 2 == 0 ) {
-        
-        char temp ;
-        temp = c2 ;
-        c2 = c1;
-        c1 = temp;
-        
-    }
-    
-    size--;
-    int t = size;
-    
-    
-    
-    recursive1(-size,c1,c2,t);
-    
+	if (!(file.get(ch))) {
+		return;
+	}
+
+	
+	if (ch == '\n') {
+		
+		if (files == 4) {
+
+			ifstream file2("OOP.txt");
+
+			if (!file2) {
+				cout << "There was an error \n";
+				return ;
+			}
+			c = 0;
+			readFileContent(file2, OOP, oopSize, c);
+
+			file2.close();
+
+			files--;
+			c = 0;
+		}else if (files == 3) {
+
+			ifstream file2("FAST.txt");
+
+			if (!file2) {
+				cout << "There was an error \n";
+				return;
+			}
+			c = 0;
+			readFileContent(file2, FAST, fastSize, c);
+
+			file2.close();
+
+			files--;
+		}else if (files == 2) {
+
+			ifstream file2("end.txt");
+
+			if (!file2) {
+				cout << "There was an error \n";
+				return;
+			}
+			c = 0;
+			readFileContent(file2, end, endSize, c);
+
+			file2.close();
+
+			files--;
+		}else if (files == 1) {
+
+			ifstream file2("67.txt");
+
+			if (!file2) {
+				cout << "There was an error \n";
+				return;
+			}
+			c = 0;
+			readFileContent(file2, sixseven, sixSize, c);
+
+			file2.close();
+
+			files--;
+		}
+
+	}
+
+	readFileNames(file, sixseven, end, FAST, OOP, files, c, fastSize, oopSize, endSize, sixSize);
+
+	
+
+
+	
 }
 
+void readFileSize(ifstream& file,int& sixSize,int&  endSize,int&  fastSize,int&  oopSize, int& files );
+
+void pass(char* password, int& p, int size) {
+
+	if (p >= size-1) {
+		*(password + p) = '\0';
+		return;
+	}
+
+	cin >> *(password + p);
+	p++;
+	pass(password, p, size);
+
+}
+
+void keycalculator(int& key,char password[9], int& c, int& two , int size, int& keyM);
 
 int main() {
-    
- int rows = 7;
- 
- printDiamond(rows,'+','-');
- 
-    return 0;
+	
+
+	int files = 0;
+	
+	int sixSize = 0;
+	int endSize = 0;
+	int fastSize = 0;
+	int oopSize = 0;
+
+
+
+	ifstream file("file_names.txt");
+
+	if (!file) {
+		cout << "There was an error \n";
+		return 0;
+	}
+
+	char ch;
+
+	file.get(ch);
+
+	if (ch == '4') {
+		files = 4;
+	}
+
+	
+	readFileSize(file, sixSize, endSize, fastSize, oopSize, files);
+
+	sixSize++;
+	endSize++;
+	fastSize++;
+	oopSize++;
+
+	char* sixseven = new char[sixSize];
+	char* end = new char[endSize];
+	char* FAST = new char[fastSize]; 
+	char* OOP = new char[oopSize]; 
+	int character = 0;
+
+	file.close();
+
+
+	ifstream file3("file_names.txt");
+
+	if (!file3) {
+		cout << "There was an error \n";
+		return 0;
+	}
+
+	
+
+	file3.get(ch);
+
+	if (ch == '4') {
+		files = 4;
+	}
+
+	readFileNames(file3, sixseven, end, FAST,OOP, files, character, fastSize, oopSize, endSize, sixSize );
+	file3.close();
+
+	
+	int pos = oopSize / 4;
+
+	pos = pos / 2;
+	pos *= 4;
+
+	
+
+	
+	 //IRON CLAD login part
+	int l = 255;
+
+	int size2 = 9;
+	char* password = new char[size2];
+	int p = 0;
+
+	cout << "Password : ";
+
+
+
+	pass(password, p, size2);
+
+	 //calculating the key 
+
+	int key = 0;
+	int c = 0;
+	int two = 1;
+	int keyM = 0;
+
+	keycalculator(key, password, c, two	,size2, keyM);
+
+
+	cout << "[IDENTITY VERIFIED] key: " <<  key << "\n Decrypting File Stream... ";
+
+	cout << endl;
+
+	
+	// the password is oopsoops and the key is correctly 187 but when i do this i don't get the result which is Y basically why is it like that
+	// Change this temporarily to see the number:
+
+	
+
+	delete[] sixseven;
+	delete[] FAST;
+	delete[] OOP;
+	delete[] end;
+
+	sixseven = FAST = OOP = end = nullptr;
+
+
+	return 0;
+
+
+
+}
+
+
+void keycalculator(int& key, char* password, int& c , int& two, int size , int& keyM ) {
+
+	if (*(password + c) == '\0') return;
+
+	int bit = 1;
+
+	bit = 	*(password + c) & bit;
+	key += bit * two;
+
+	bit = 2;
+
+	bit = *(password + c) & bit;
+	keyM += bit * two;
+
+	two *= 2;
+
+	c++;
+
+	keycalculator(key, password, c, two, size, keyM);
+
+}
+
+
+void readFileSize(ifstream& file, int& sixSize, int& endSize, int& fastSize, int& oopSize, int& files ) {
+
+char ch;
+
+if (!(file.get(ch))) {
+	return;
+}
+
+
+if (ch == '\n') {
+
+	if (files == 4) {
+
+		ifstream file2("OOP.txt");
+
+		if (!file2) {
+			cout << "There was an error \n";
+			return;
+		}
+		
+		oopSize = 0;
+		readFileContent(file2, oopSize);
+
+		file2.close();
+
+		files--;
+		
+	}
+	else if (files == 3) {
+
+		ifstream file2("FAST.txt");
+
+		if (!file2) {
+			cout << "There was an error \n";
+			return;
+		}
+		
+		fastSize = 0;
+		readFileContent(file2, fastSize);
+
+		file2.close();
+
+		files--;
+
+	}
+	else if (files == 2) {
+
+		ifstream file2("end.txt");
+
+		if (!file2) {
+			cout << "There was an error \n";
+			return;
+		}
+		endSize = 0;
+		readFileContent(file2, endSize);
+
+		file2.close();
+
+		files--;
+
+	}
+	else if (files == 1) {
+
+		ifstream file2("67.txt");
+
+		if (!file2) {
+			cout << "There was an error \n";
+			return;
+		}
+		sixSize = 0;
+		readFileContent(file2, sixSize);
+
+		file2.close();
+
+		files--;
+
+	}
+
+}
+
+readFileSize(file, sixSize, endSize, fastSize, oopSize, files);
+
+
 }
