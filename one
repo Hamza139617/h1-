@@ -1,92 +1,67 @@
 #include <iostream>
-#include <fstream>
 using namespace std;
 
-void readFileContent(ifstream& file, char array[100], const int size, int& c) {
-
-	char ch;
-
-	if (!(file.get(ch))) {
-		return;
-	}
-
-	*(array + c) = ch;
-
-	readFileContent(ifstream & file, char array[100], const int size, int& c);
-
-
-
-}
-
-void readFileNames(ifstream& file,char sixseven[100], char end[100], char FAST[100], char OOP[100], const int size, int& files, int& c) {
-
-	char ch;
-
-	if (!(file.get(ch))) {
-		return;
-	}
-
-	
-	if (ch == '\n') {
-		
-		if (files == 4) {
-
-			ifstream file2("OOP.txt");
-
-			if (!file2) {
-				cout << "There was an error \n";
-				return ;
-			}
-			c = 0;
-			readFileContent(file2, OOP, size, c);
-
-			file2.close();
-
-			files--;
-		}
-
-	}
-
-	readFileNames(file, sixseven, end, FAST, OOP, size, files, c);
-
-	
-
-
-	
-}
-
 int main() {
-	
-
-	int files = 0;
-	const int size = 100;
-	char sixseven[size];
-	char end[size];
-	char FAST[size];
-	char OOP[size];
-	int character = 0;
-
-	ifstream file("file_names.txt");
-
-	if (!file) {
-		cout << "There was an error \n";
-		return 0;
-	}
-
-	char ch;
-
-	file.get(ch);
-
-	if (ch == '4') {
-		files = 4;
-	}
-
-	readFileNames(file, sixseven, end, FAST,OOP, size, files, character);
-
-	file.close();
-
-	return 0;
-
-
-
+    
+    char a = '#';
+    bool flag = true;
+    char c = ' ';
+    int a1 = 0;
+    int b1 = 0;
+    
+    for(int i = 0 ; i < 9 ; i++ ) {
+        
+        for(int j = 0 ; j < 6 ; j++ ) {
+            
+            if(a1 == 2 ) {
+                
+                a = ((a == ' ')? '#' : ' ');
+                a1 = 0 ;
+                
+            }
+            
+            cout << a;
+            a1++;
+            
+        }
+        
+    
+        a1 = 0;
+        
+        for(int j = 0 ; j < 6 ; j++ ) {
+            
+            if(a1 == 2 ) {
+                
+                a = ((a == ' ')? '#' : ' ');
+                a1 = 0 ;
+                
+            }
+            
+            cout << ' ';
+            a1++;
+            
+        }
+        
+        a1 = 0;
+        
+        for(int j = 0 ; j < 6 ; j++ ) {
+            
+            if(a1 == 2 ) {
+                
+                a = ((a == ' ')? '#' : ' ');
+                a1 = 0 ;
+                
+            }
+            
+            cout << a;
+            a1++;
+            
+        }
+        
+        
+        
+        cout << endl ;
+    }
+    
+    return 0;
 }
