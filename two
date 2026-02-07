@@ -1,364 +1,1341 @@
+/*
+Name:
+Roll Number:
+Setion:
+*/
+
+#pragma once
 #include <iostream>
-#include <fstream>
+#include <cstring>
 using namespace std;
 
-void readFileContent(ifstream& file, int& Size) {
-	
-	char ch;
+//---------------- SHAPESHIFTER -----------------
+int*** CreateViews(int* data, int size, int& num_views) {
+    num_views = 0;
+    
+    // count the number of num vies 
+    for (int i = 1; i <= size; i++) {
+        if (size % i == 0) {
+            num_views++;
+        }
+    }
 
-	if (!(file.get(ch))) {
-		return;
-	}
+    // creation of the views 
+    // this is why needed we num_views 
+    int*** views = new int** [num_views];
 
-	Size++;
 
-	readFileContent(file, Size);
+
+
+
+    int views_id = 0; // for traversing through the view 
+
+     // generation of the views 
+
+
+
+
+    for (int i = 1; i <= size; i++) {
+
+
+        if (size % i == 0) {
+
+
+            int rows = i;
+
+
+            int cols = size / rows ;
+
+
+
+// creation of the rows over here 
+
+
+
+            *(views + views_id) = new int* [rows];
+
+
+
+            for (int r = 0; r < rows; r++) {
+   *(*(views + views_id) + r) = (data + (r * cols));
+            }
+
+
+
+            views_id++;
+
+
+
+        }
+
+
+
+    }
+
+
+
+
+
+
+
+    return views;
+}
+
+//---------------- String Engine ----------------
+int getLength(const char* str) {
+
+    int count = 0;
+
+    if (str == nullptr) return 0;
+
+    while (*(str + count) != '\0')
+        count++;
+
+    
+    return count;
+}
+
+char* copyString(const char* str) {
+
+    int length = getLength(str);
+
+    
+
+    char* copy = new char[length+1];
+
+    
+
+    if (str == nullptr)
+        return nullptr;
+    
+    
+
+    int i;
+
+    for ( i = 0; i < length; i++)
+        *(copy + i) = *(str + i);
+
+    *(copy + i) = '\0';
+
+    return copy;
+}
+
+bool areEqual(const char* str1, const char* str2) {
+
+    if (getLength(str1) != getLength(str2)) return false;
+
+    for (int i = 0; i < getLength(str1); i++) {
+
+        if (*(str1 + i) != *(str2 + i))
+            return false;
+
+    }
+
+    if (str1 == nullptr) return false;
+
+    return true;
+}
+
+char* concatenate(const char* str1, const char* str2) {
+    
+    int length = getLength(str1) + getLength(str2);
+    char* result = new char[length+1];
+
+    if (str1 == nullptr && str2 == nullptr) return nullptr;
+
+
+    int i;
+
+    for ( i = 0; i < length; i++) {
+        
+        if (i < getLength(str1)) {
+            *(result + i) = *(str1 + i);
+        }
+        else {
+            *(result + i) = *(str2 + (i - getLength(str1) ));
+        }
+
+    }
+
+    *(result + i) = '\0';
+    //cout << result;
+    return result;
+}
+
+void toUpperCase(char* str) {
+
+    for (int i = 0; i < getLength(str); i++) {
+
+        if (*(str + i) > 90 && (*(str + i) >= 97 && *(str + i) <= 122 ) ) {
+
+            *(str + i) = *(str + i) - 32;
+
+        }
+        
+
+    }
+
+}
+
+void toLowerCase(char* str) {
+
+    for (int i = 0; i < getLength(str); i++) {
+
+        
+
+         if (*(str + i) < 97 && ( *(str+i) >= 65 && *(str + i) <= 90 ) ) {
+
+            *(str + i) = *(str + i) + 32;
+
+        }
+
+
+    }
+
+}
+
+int findFirstOccurrence(const char* str, char c) {
+
+    for (int i = 0; i < getLength(str); i++) {
+        
+        if (*(str + i) == c)
+/*cout << i; */ return i;
+
+
+    }
+
+    return -1;
+}
+
+int findSubstring(const char* str, const char* sub) {
+
+    bool same;
+
+    for (int i = 0; i < getLength(str); i++) {
+
+        same = true;
+
+        for (int j = 0; j < getLength(sub); j++) {
+
+            if (*(str + i + j ) != *(sub + j)) {
+                same = false;
+                break;
+            }
+
+        }
+
+        if (same == true)
+            return i;
+
+    }
+
+    return -1;
+}
+
+char* reverseString(char* str) {
+
+    int mid = getLength(str) / 2;
+
+    int length = getLength(str) ;
+
+    char* str1 = new char[length+1];
+
+
+    for (int i = 0; i < length +1; i++) *(str1 + i) = *(str + i);
+
+    
+
+    for (int i = 0; i < mid; i++) {
+        char temp = *(str1 + i);
+        *(str1 + i) = *(str1 + (getLength(str1) - i - 1));
+        *(str1 + (getLength(str1) - i - 1)) = temp;
+        
+    }
+
+    
+
+    //cout << str1;
+    return str1;
+
+}
+
+char* removeCharacter(char* str, char c) {
+
+    int length = getLength(str);
+    char* str1 = new char[length + 1];
+
+    for (int i = 0; i < length + 1; i++) *(str1 + i) = *(str + i);
+
+    int ptr1 = 0, ptr2 = 0;
+    bool zeroEncountered = false;
+
+    
+
+    while (ptr2 < length) {
+
+        
+        if (*(str1 + ptr1) == c) {
+            zeroEncountered = true;
+        }
+
+        if (zeroEncountered) {
+
+            for (; ptr2 < length && *(str1 + ptr2) == c; ptr2++);
+                
+
+            *(str1 + ptr1) = *(str1 + ptr2);
+            *(str1 + ptr2) = c;
+         
+            
+        }
+
+        ptr1++;   
+        ptr2++;
+
+    }
+
+    // getLength function overhere but with l as the delimtere
+
+    int count = 0;
+
+    while (*(str1 + count) != c)
+        count++;
+
+    *(str1 + count) = '\0';
+
+    return str1;
+
 
 
 
 }
 
-void readFileContent(ifstream& file, char* array, const int size, int& c) {
+char* substring(const char* str, int start, int length) {
 
-	char ch;
+    char* result = new char[length + 1];
 
-	if (!(file.get(ch))) {
-		
-		*(array + c) = '\0';
+    if (start > getLength(str)) return nullptr;
 
-		return;
-	}
+    int j = 0;
+    for (int i = start; j < length; i++, j++) {
 
-	*(array + c) = ch;
+        *(result + j) = *(str + i);
 
-	c++;
+    }
 
-	readFileContent( file, array, size, c);
+    *(result + j) = '\0';
+
+    return result;
+}
+
+char*  replaceChar(char* str, char oldChar, char newChar) {
+
+    char* str1 = new char[getLength(str) + 1];
+
+    for (int i = 0; i < getLength(str) + 1; i++) *(str1 + i) = *(str + i);
+
+    for (int i = 0; i < getLength(str); i++) {
+
+        if (*(str1 + i) == oldChar)
+            *(str1 + i) = newChar;
+
+
+    }
+
+    return str1;
+
+}
+
+char* insertAt(const char* str, const char* sub, int pos) {
+
+    int length = getLength(str) + getLength(sub);
+
+    bool positionReached = false;
+    bool subPrint = false;
+
+    char* string = new char[length + 1];
+
+    int i;
+
+    for (i = 0; i < length; i++) {
+
+        if (!(positionReached) && !(subPrint) && i != pos) {
+
+            *(string + i) = *(str + i);
+
+        }
+
+        if (i == pos || positionReached) {
+
+            *(string + i) = *(sub + (i - pos));
+            positionReached = true;
+        }
+
+        if (i - pos == getLength(sub) && positionReached) {
+            positionReached = false;
+            subPrint = true;
+        }
+
+        if (!(positionReached) && subPrint) {
+
+            *(string + i) = *(str + (i - getLength(sub)));
+
+        }
+
+
+    }
+
+    *(string + i) = '\0';
+
+    return string;
+}
+
+char* replaceSubstring(const char* str, const char* oldSub, const char* newSub) {
+    int i = 0;
+    int count = 0;
+
+    // count the number of the occurences
+    while ((findSubstring(str + i, oldSub)) != -1) 
+    {
+        count++;
+        i += findSubstring(str + i, oldSub) + getLength(oldSub);
+    }
+
+
+    int length = getLength(str) - (getLength(oldSub) * count) + (getLength(newSub) * count);  // this is for the calculation of the resultant string
+    
+    
+    char* string = new char[length + 1 + 32];
+    // filling all of the
+    
+
+
+                
+                                // STRING with the null character 
+    for (int z = 0; z < length + 1 + 32; ++z) *(string + z) = '\0';
+
+    int* position = new int[count];
+    for (int p = 0; p < count; ++p)
+        *(position + p) = 0; 
+
+    int times = 0;
+    i = 0;
+
+    while (findSubstring(str + i, oldSub) != -1) {
+        *(position + times) = findSubstring(str + i, oldSub) + i;
+        i += findSubstring(str + i, oldSub) + getLength(oldSub);
+        times++;
+    }
+
+    bool newPlaced = false;
+
+    int j = 0;
+
+  
+    for (int pos = 0; j < length; j++) {
+
+        
+
+        if ( j != *(position + pos) && !(newPlaced)) {
+
+            *(string + j) = *(str + j);
+
+        }
+        else if ( j == *(position + pos)) {
+
+            for (int k = 0; k < getLength(newSub); k++) {
+
+                *(string + (j + k)) = *(newSub + k);
+
+            }
+
+
+            newPlaced = true;
+            pos++;
+
+
+        }
+        else if ( (j != *(position + pos) && newPlaced)) {
+            
+
+
+            *(string + j + (pos * getLength(newSub))) = *(str + j + (pos * getLength(oldSub)));
+        }
+    }
+
+    *(string + j) = '\0';  // ding a backlash zero at end we have to do it manually 
+    delete[] position;
+    position = nullptr;
+
+
+    return string;
+}
+
+
+
+char* deleteRange(char* str, int start, int length) {
+
+
+    // use the substring function for finding the specific substring
+
+    char* str1 = new char[getLength(str) + 1];
+
+    for (int i = 0; i < getLength(str) + 1; i++) *(str1 + i) = *(str + i);
+
+    char* sub = substring(str, start, length);
+
+    int pos = start;
+
+    int lengt = getLength(str1) - getLength(sub);
+
+    char* newSub = new char[lengt+1];
+
+    for (int i = 0; i < lengt; i++) *(newSub + i) = '\0';
+
+    for (int i = 0; i < lengt; i++) {
+
+        *(newSub + i) = *(str1 + i + getLength(sub) + pos );
+
+    }
+
+    *(newSub + lengt) = '\0';
+
+    char* newStr = replaceSubstring(str1, sub, newSub);
+
+    for (int i = 0; i < getLength(str1); i++) {
+
+        *(str1 + i) = *(newStr + i);
+
+
+    }
+
+
+
+
+    delete[] newStr;
+
+    newStr = nullptr;
+
+    delete[] newSub;
+
+    newSub = nullptr;
+    delete[] sub;
+
+
+    sub = nullptr;
+
+    return str1;
+
+}
+
+char* compress(const char* str) {
+
+
+    char* d = new char[getLength(str) + 1];
+
+
+
+    for (int i = 0; i < getLength(str) + 1; i++) *(d + i) = '\0';
+
+
+
+    bool find = false;
+
+    // this belw loop for calculation of occurences
+
+    
+    for (int i = 0; i < getLength(str); i++) { // for different occurences 
+
+        int j;
+
+        for (j = 0; *(d + j) != '\0'; j++) {
+
+            if (*(d + j) == *(str + i)) {
+                find = true;
+                break;
+            }
+
+        }
+
+        if (find == false) {
+            *(d + j) = *(str + i);
+        }
+        find = false;
+
+    }
+
+    
+    *(d + getLength(str)) = '\0';
+
+    int n = getLength(d);
+    
+
+    char* counter = new char[n + 1];
+
+    for (int i = 0; i < n; i++) {
+
+        int count = 0;
+
+        for (int j = 0; j < getLength(str); j++) {
+
+            if (*(d + i) == *(str + j))
+                count++;
+
+        }
+
+        *(counter + i) = char(count + 48);
+
+    }
+    *(counter + n) = '\0';
+
+    char* result = new char[n * 2 + 1];
+
+    for (int i = 0; i < n * 2; i++) *(result + i) = '\0';
+
+    bool alternate = false;
+
+    
+    for (int j = 0, s = 0; j < n * 2; j++) {
+
+        if (alternate == false) {
+
+            *(result + j) = *(d + s);
+            alternate = true;
+        }
+        else {
+            *(result + j) = *(counter + s);
+            alternate = false;
+            s++;
+        }
+
+    }
+
+    // ptins the backnash zero for the last
+    *(result + n * 2) = '\0';
+
+    delete[] counter;
+    counter = nullptr;
+
+    delete[] d;
+    d = nullptr;
+
+    return result;
+}
+
+
+char* decompress(const char* str) {
+
+    
+
+    int finalSize = 0;
+    for (int i = 0; i < getLength(str); i += 2) {  // vaasically the final size is going to depend over the integer 
+
+
+        
+        finalSize += (*(str + i + 1) - 48);
+    }
+
+
+    char* changer = new char[finalSize + 2];
+
+   
+    
+    for (int i = 0; i < finalSize + 2; i++) *(changer + i) = '\0';
+
+    int j = 0;
+
+    for (int i = 0, c = 0; i < getLength(str) / 2; i++) {
+
+        char a = *(str + c);
+        int b = *(str + c + 1) - 48;
+        int l = j - getLength(changer);
+
+        for ( ; l < b; j++, l++) {
+
+
+            *(changer + j) = a;
+
+        }
+        c += 2;
+    }
+
+    *(changer + j) = '\0';
+
+    
+
+    return changer;
+
+}
+
+char* rotateString(char* str, int k) {
+
+    char* str1 = new char[getLength(str) + 1];
+
+    for (int i = 0; i < getLength(str) + 1; i++) *(str1 + i) = *(str + i);
+
+    if (k == 0) return str1;
+
+    while (k < 0) {
+        char temp;
+        int i;
+
+        for ( i = getLength(str1) -1 ; i > 0 ; i-- ) {
+
+            if (i == getLength(str1) - 1) {
+                temp = *(str1 + i);
+            }
+
+            *(str1 + i) = *(str1 + i - 1);
+
+        }
+
+        *(str1 + i) = temp;
+        k++;
+    }
+
+    while (k > 0) {
+        char temp;
+        int i;
+
+        for (i = 0; i < getLength(str1) -1; i++ ) {
+
+            if (i == 0 ) {
+                temp = *(str1 + i);
+            }
+
+            *(str1 + i) = *(str1 + i + 1);
+
+        }
+
+        *(str1 + i) = temp;
+        k--;
+    }
+
+    return str1;
+}
+
+//---------------- Recurion patterns -----------------
+
+void recursive2(int size1, char c1, char c2, int t, int size2, int n) {
+
+    if (size1 > t) return;
+
+    if (t >= ((size2 < 0) ? -size2 : size2) + ((size1 < 0) ? -size1 : size1)) {
+
+        if (n == 0) {
+            cout << c1;
+            n = 1;
+        }
+        else {
+            cout << c2;
+            n = 0;
+        }
+
+    }
+    else {
+        cout << " ";
+    }
+
+    size1++;
+
+    recursive2(size1, c1, c2, t, size2, n);
+
+    return;
+}
+
+void recursive1(int size, char c1, char c2, int t) {
+
+    if (size > t) return;
+
+    int n = 0;
+
+    recursive2(-t, c1, c2, t, size, n);
+
+    cout << endl;
+    size++;
+
+
+
+    recursive1(size, c1, c2, t);
+
+
+}
+
+void printDiamond(int size, char c1, char c2) {
+
+    if (size % 2 == 0) {
+
+        char temp;
+        temp = c2;
+        c2 = c1;
+        c1 = temp;
+
+    }
+
+    size--;
+    int t = size;
+
+
+
+    recursive1(-size, c1, c2, t);
+
+}
+
+int checkSize(int size, int current = 1) {
+
+    if (size < 3) return 3;
+
+    if (current * 3 > size)  return current;
+
+    checkSize(size, current * 3);
+
+}
+
+void initializeGrid(char**& grid, int times, int input, int& j) {
+    if (j == input) return;
+
+    *(*(grid + times) + j) = '1';
+    j++;
+    initializeGrid(grid, times, input, j);
+
+}
+
+void declareGrid(char** grid, int& times, int input) {
+
+    if (times == input) return;
+
+    *(grid + times) = new char[input];
+
+    int j = 0;
+
+    initializeGrid(grid, times, input, j);
+
+    declareGrid(grid, ++times, input);
+
+}
+
+void drawBlocks(char** g, int r, int c, int subBlock, int i, int j);
+
+void drawX(char** g, int r, int c, int sz) {
+    if (sz == 1) {
+        *(*(g + r) + c) = '#';
+        return;
+    }
+
+    drawBlocks(g, r, c, sz / 3, 0, 0);// for making the whole process a block level
+
+}
+
+
+void drawBlocks(char** g, int r, int c, int subBlock, int i, int j) {
+
+    if (i == 3) return;
+    if (j == 3) {
+        drawBlocks(g, r, c, subBlock, i + 1, 0);
+        return;
+    }
+
+    if (i == j || (i + j) == 2) {  // checking if it lies on the place where a ## needs to be crated
+        drawX(g, r + i * subBlock, c + j * subBlock, subBlock);
+    }
+
+    drawBlocks(g, r, c, subBlock, i, j + 1);
+
+}
+
+
+
+
+void printColumns(char** grid, int rows, int cols, int input) {
+
+    if (cols == input) return;
+
+    char c = *(*(grid + rows) + cols);
+
+    if (c == '#') cout << "##";
+    else cout << "  ";
+
+    printColumns(grid, rows, ++cols, input);
+
+}
+
+void printX(char** grid, int input, int rows) {
+
+
+
+    if (rows == input) return;
+
+    int cols = 0;
+
+    printColumns(grid, rows, cols, input);
+
+    cout << endl;
+
+    printX(grid, input, ++rows);
 
 
 
 }
 
-void readFileNames(ifstream& file,char* sixseven, char* end, char* FAST, char* OOP, int& files, int& c,const int fastSize,const int oopSize,const int endSize,const int sixSize) {
+void deleteGrid(char** grid, int rows, int input) {
+    
+    if (rows == input) return;
 
-	char ch;
+    delete[] * (grid + rows);
 
-	if (!(file.get(ch))) {
-		return;
-	}
+    rows++;
 
-	
-	if (ch == '\n') {
-		
-		if (files == 4) {
-
-			ifstream file2("OOP.txt");
-
-			if (!file2) {
-				cout << "There was an error \n";
-				return ;
-			}
-			c = 0;
-			readFileContent(file2, OOP, oopSize, c);
-
-			file2.close();
-
-			files--;
-			c = 0;
-		}else if (files == 3) {
-
-			ifstream file2("FAST.txt");
-
-			if (!file2) {
-				cout << "There was an error \n";
-				return;
-			}
-			c = 0;
-			readFileContent(file2, FAST, fastSize, c);
-
-			file2.close();
-
-			files--;
-		}else if (files == 2) {
-
-			ifstream file2("end.txt");
-
-			if (!file2) {
-				cout << "There was an error \n";
-				return;
-			}
-			c = 0;
-			readFileContent(file2, end, endSize, c);
-
-			file2.close();
-
-			files--;
-		}else if (files == 1) {
-
-			ifstream file2("67.txt");
-
-			if (!file2) {
-				cout << "There was an error \n";
-				return;
-			}
-			c = 0;
-			readFileContent(file2, sixseven, sixSize, c);
-
-			file2.close();
-
-			files--;
-		}
-
-	}
-
-	readFileNames(file, sixseven, end, FAST, OOP, files, c, fastSize, oopSize, endSize, sixSize);
-
-	
-
-
-	
-}
-
-void readFileSize(ifstream& file,int& sixSize,int&  endSize,int&  fastSize,int&  oopSize, int& files );
-
-void pass(char* password, int& p, int size) {
-
-	if (p >= size-1) {
-		*(password + p) = '\0';
-		return;
-	}
-
-	cin >> *(password + p);
-	p++;
-	pass(password, p, size);
+    deleteGrid(grid, rows, input);
 
 }
 
-void keycalculator(int& key,char password[9], int& c, int& two , int size, int& keyM);
+void renderGrid(int r, int size) {
 
-int main() {
-	
+    size = 9;
 
-	int files = 0;
-	
-	int sixSize = 0;
-	int endSize = 0;
-	int fastSize = 0;
-	int oopSize = 0;
+    int input = checkSize(size);
 
+    char** grid = new char* [input];
 
+    int times = 0;
 
-	ifstream file("file_names.txt");
+    declareGrid(grid, times, input); // declaring and inializing grid 
 
-	if (!file) {
-		cout << "There was an error \n";
-		return 0;
-	}
+    drawX(grid, 0, 0, input);
+    
+    int rows = 0;
 
-	char ch;
+    printX(grid, input, rows); // printng the x 
 
-	file.get(ch);
+    rows = 0;
 
-	if (ch == '4') {
-		files = 4;
-	}
+    deleteGrid(grid, rows, input);
 
-	
-	readFileSize(file, sixSize, endSize, fastSize, oopSize, files);
+    delete[] grid;
 
-	sixSize++;
-	endSize++;
-	fastSize++;
-	oopSize++;
-
-	char* sixseven = new char[sixSize];
-	char* end = new char[endSize];
-	char* FAST = new char[fastSize]; 
-	char* OOP = new char[oopSize]; 
-	int character = 0;
-
-	file.close();
-
-
-	ifstream file3("file_names.txt");
-
-	if (!file3) {
-		cout << "There was an error \n";
-		return 0;
-	}
-
-	
-
-	file3.get(ch);
-
-	if (ch == '4') {
-		files = 4;
-	}
-
-	readFileNames(file3, sixseven, end, FAST,OOP, files, character, fastSize, oopSize, endSize, sixSize );
-	file3.close();
-
-	
-	int pos = oopSize / 4;
-
-	pos = pos / 2;
-	pos *= 4;
-
-	
-
-	
-	 //IRON CLAD login part
-	int l = 255;
-
-	int size2 = 9;
-	char* password = new char[size2];
-	int p = 0;
-
-	cout << "Password : ";
-
-
-
-	pass(password, p, size2);
-
-	 //calculating the key 
-
-	int key = 0;
-	int c = 0;
-	int two = 1;
-	int keyM = 0;
-
-	keycalculator(key, password, c, two	,size2, keyM);
-
-
-	cout << "[IDENTITY VERIFIED] key: " <<  key << "\n Decrypting File Stream... ";
-
-	cout << endl;
-
-	
-	// the password is oopsoops and the key is correctly 187 but when i do this i don't get the result which is Y basically why is it like that
-	// Change this temporarily to see the number:
-
-	
-
-	delete[] sixseven;
-	delete[] FAST;
-	delete[] OOP;
-	delete[] end;
-
-	sixseven = FAST = OOP = end = nullptr;
-
-
-	return 0;
-
-
+    return;
 
 }
 
 
-void keycalculator(int& key, char* password, int& c , int& two, int size , int& keyM ) {
-
-	if (*(password + c) == '\0') return;
-
-	int bit = 1;
-
-	bit = 	*(password + c) & bit;
-	key += bit * two;
-
-	bit = 2;
-
-	bit = *(password + c) & bit;
-	keyM += bit * two;
-
-	two *= 2;
-
-	c++;
-
-	keycalculator(key, password, c, two, size, keyM);
+void countWord(const char* input, int& count, int& counter ) {
+    if (*(input + counter) == '\0') { count++; return; }
+    if (*(input + counter) == ' ') count++;
+    counter++;
+    countWord(input, count, counter);
 
 }
 
+//------------ Mystery Of Severance -----------
 
-void readFileSize(ifstream& file, int& sixSize, int& endSize, int& fastSize, int& oopSize, int& files ) {
+void l(char* letters, int& n, int& i) {
 
-char ch;
+    if (i == n) { *(letters + i) = '\0'; return; }
 
-if (!(file.get(ch))) {
-	return;
-}
+    if (i <= 25)
+        *(letters + i) = 'A' + i;
+    else
+        *(letters + i) = '0' + (i-26);
 
-
-if (ch == '\n') {
-
-	if (files == 4) {
-
-		ifstream file2("OOP.txt");
-
-		if (!file2) {
-			cout << "There was an error \n";
-			return;
-		}
-		
-		oopSize = 0;
-		readFileContent(file2, oopSize);
-
-		file2.close();
-
-		files--;
-		
-	}
-	else if (files == 3) {
-
-		ifstream file2("FAST.txt");
-
-		if (!file2) {
-			cout << "There was an error \n";
-			return;
-		}
-		
-		fastSize = 0;
-		readFileContent(file2, fastSize);
-
-		file2.close();
-
-		files--;
-
-	}
-	else if (files == 2) {
-
-		ifstream file2("end.txt");
-
-		if (!file2) {
-			cout << "There was an error \n";
-			return;
-		}
-		endSize = 0;
-		readFileContent(file2, endSize);
-
-		file2.close();
-
-		files--;
-
-	}
-	else if (files == 1) {
-
-		ifstream file2("67.txt");
-
-		if (!file2) {
-			cout << "There was an error \n";
-			return;
-		}
-		sixSize = 0;
-		readFileContent(file2, sixSize);
-
-		file2.close();
-
-		files--;
-
-	}
+    i++; l(letters, n, i);
 
 }
 
-readFileSize(file, sixSize, endSize, fastSize, oopSize, files);
+void tlcal2(char* letters, int& j, char c, int& tl, const char** ms) {
+    if (j == getLength(letters)) return;
+   
+    if (c == *(letters + j)) { tl += getLength(*(ms + j)) + 1; return; }
+
+    j++;
+    tlcal2(letters, j, c, tl, ms);
+
+}
+
+void tlcal(int& i, const char* input, char* letters,const char** morseCodes, int& tL, char& c, int size) {
+
+    if (i == size) return;
+
+    c = *(input + i);
+
+    if (c >= 'a' && c <= 'z') c -= 32;
+
+    if (c != ' ') {
+        int j = 0;
+        tlcal2(letters, j, c, tL, morseCodes);
+    }
+    else { tL += 1; }
+
+    i++;
+    tlcal(i, input, letters, morseCodes, tL, c, size);
+
+    //cout << tlcal2;
+
+}
+
+void converstion2(char c, int& j, char* letters, char* result, const char** ms, int& i, int size) {
+    if (j == getLength(letters)) return;
+    if (c == *(letters + j)) {
+        strcat(result, ms[j]);
+        if (i + 1 != size)
+            strcat(result, " ");
+        return;
+    }
+
+    j++;
+
+    converstion2(c, j, letters, result, ms, i, size);
+
+}
+
+void converstion(const char* input, int& i,char& c,char* result,char* letters,const char** ms,int size) {
+
+    if (i == size)  return ;
+
+    c = *(input + i);
+
+    if (c >= 'a' && c <= 'z') c -= 32;
+
+    if (c == ' ') strcat(result, "1");
+    else {
+
+        int j = 0;
+
+        
+
+        converstion2(c,j, letters, result, ms, i, size);
+
+    }
+
+    i++;
+    converstion(input, i, c, result, letters, ms, size);
+
+}
+
+char* morseCode(const char* input, int size) {
+    
+    int n = 36; 
+    char* letters = new char[n + 1] ;
+    const char** ms = new const char* [n];
+    int i = 0;
+    
+
+    *(ms+0) = ".-";
+    *(ms+1) = "-...";
+    *(ms+2) = "-.-.";
+    *(ms+3) = "-..";
+*(ms +4) = ".";
+*(ms +5) = "..-.";
+*(ms +6) = "--.";
+    *(ms +7) = "....";
+    *(ms +8) = ".."; *(ms+9) = ".---";
+    *(ms+10) = "-.-";
+    *(ms+11) = ".-..";
+    *(ms+12) = "--";
+    *(ms+13) = "-.";
+    *(ms+14) = "---";
+    *(ms+15) = ".--.";
+    *(ms+16) = "--.-";
+    *(ms+17) = ".-.";   *(ms+18) = "...";
+    *(ms+19) = "-";
+    *(ms+20) = "..-";
+    *(ms+21) = "...-";
+    *(ms+22) = ".--";
+    *(ms+23) = "-..-";
+    *(ms+24) = "-.--"; *(ms+25) = "--..";
+    *(ms+26) = "-----";
+    *(ms+27) = ".----";*(ms+28) = "..---";
+    *(ms+29) = "...--"; *(ms+30) = "....-";
+   *(ms+31) = ".....";
+                             *(ms+32) = "-....";
+                  *(ms+33) = "--...";
+ *(ms+34) = "---..";*(ms+35) = "----.";
+
+    int tL = 0;
+    
+    char c;
+    
+    l(letters, n, i);
+    i = 0; 
+    tlcal(i, input, letters, ms, tL, c, size);
 
 
+    char* result = new char[tL + 1]; // it going to calculate the morse version
+    result[0] = '\0';
+
+    //cout << result; 
+    
+
+    i = 0;
+    
+    converstion(input, i, c, result, letters, ms, size);
+
+    *(result + tL) = '\0';
+
+    return result;
+}
+
+void fcluster(bool**& cluster, int& l, char* m, int*& s2, int& counter, int& counter2) {
+
+    if (*(m + counter) == '\0') {
+
+        if (counter2 % 2 != 0) {
+
+            *(*(cluster + l) + counter2++) = false;
+
+
+        }
+
+
+
+
+        
+        counter2 = 0;
+        l++;
+
+
+
+        return;
+    }
+
+    if (*(m + counter) == '.') {
+
+        *(*(cluster + l) + counter2) = true;
+        counter2++;
+
+    }
+
+    if (*(m + counter) == '-') {
+        
+        *(*(cluster + l) + counter2++) = true;
+        *(*(cluster + l) + counter2++) = true;
+        *(*(cluster + l) + counter2++) = true;
+        
+
+    }
+
+    if (*(m + counter) == ' ' && *(m + counter + 1) != '1') {
+
+        *(*(cluster + l) + counter2++) = false;
+        *(*(cluster + l) + counter2++) = false;
+
+
+    }
+    else if ((*(m + counter + 1) == '-' || *(m + counter + 1) == '.') && (*(m + counter) == '-' || *(m + counter) == '.')) {
+        *(*(cluster + l) + counter2++) = false;
+    
+    }
+
+    if (*(m + counter) == '1') {
+
+        if (counter2 % 2 != 0) {
+
+            *(*(cluster + l) + counter2++) = false;
+            
+        
+        }
+
+
+
+        
+
+        
+        
+
+        counter2 = 0;
+        l++;
+
+        *(cluster + l) = new bool[*(s2 + l)];
+
+    }
+
+
+
+    counter++;
+
+
+    fcluster( cluster, l, m, s2, counter, counter2);
+
+
+
+};
+
+void calculateSize(int& l, char* m, int*& sizes, int& counter, int& counter2, int*& s2 ) {
+
+    if (*(m + counter) == '\0') {
+        
+        if (counter2 % 2 != 0) counter2++;
+
+        *(s2 + l) = counter2;
+
+        counter2 = counter2 / 2;
+        *(sizes + l) = counter2;
+
+        counter2 = 0;
+        l++;
+
+        
+
+
+        return;
+    }
+
+    if (*(m + counter) == '.') {
+        
+        counter2++;
+        
+    }
+
+    if (*(m + counter) == '-') {
+        counter2 += 3;
+        
+    }
+
+    if (*(m + counter) == ' ' && *(m + counter + 1) != '1') {
+
+        counter2 += 2;
+        
+        
+    }
+    else if((*(m + counter+1) == '-' || *(m + counter + 1) == '.') && ( *(m + counter) == '-' || *(m + counter ) == '.')) {
+        counter2++;
+    }
+    
+    if (*(m + counter) == '1') {
+        
+        if (counter2 % 2 != 0) counter2++;
+
+        *(s2 + l) = counter2;
+
+        counter2 = counter2 / 2;
+        *(sizes + l) = counter2;
+
+        counter2 = 0;
+        l++;
+        
+
+
+    }
+
+
+
+    counter++;
+    
+    //cout << counter2;
+
+    calculateSize(l,m, sizes, counter, counter2, s2);
+    
+    
+
+}
+
+bool** refineSignal(const char* input, int& count, int*& sizes) {
+
+    // count the number of words 
+    int counter = 0;
+
+    countWord(input, count, counter );
+    
+    sizes = new int[count + 5];  
+
+    int size = getLength(input);
+
+    char* m = morseCode(input, size);
+
+    counter = 0;
+    int counter2 = 0;
+    int l = 0;
+    int* s2 = new int[count];
+
+    calculateSize(l,m, sizes, counter, counter2, s2 );
+
+
+    // creating the clt
+
+    bool** cluster = new bool* [count + 10]; // badal dalta
+
+    *cluster = new bool[*(s2)];
+
+    l = 0;
+    counter2 = 0;
+    counter = 0;
+
+    fcluster(cluster, l, m, s2, counter, counter2);
+    
+ 
+    
+    delete[] m;
+    
+
+    return cluster;
+}
+
+long long computC(bool**& cluster, int*& sizes, int count, int& threshold, unsigned short* ptr = nullptr) {
+
+    if (threshold >= (*sizes)) return 0;
+    
+    if(threshold == 0 )
+    ptr = reinterpret_cast<unsigned short*>(*cluster++);
+    
+
+    long long currentVal = 0;
+    
+
+    // logic
+
+    if (*ptr % 2 == 0) {
+        currentVal = (currentVal << 1) + (*ptr);
+    }
+    else {
+        currentVal = (currentVal >> 1) ^ (*ptr);
+    }
+
+    ptr++;
+    threshold++;
+
+    return currentVal + computC(cluster, sizes, count, threshold, ptr);
+        
+}
+
+long long computeChecksum(bool** cluster, int* sizes, int count, int threshold) {
+   
+    if (threshold >= count) return 0;
+ 
+    int t = threshold; // temp store value 
+
+    threshold = 0;
+   long long currentVal = computC(cluster, sizes, count, threshold);
+
+   sizes++;
+
+
+   //cout << currentVal 
+
+   if (t % 3 == 0)
+       return currentVal + computeChecksum(cluster, sizes, count, ++t);
+   else
+       return currentVal - computeChecksum(cluster, sizes, count, ++t);
+
+
+}
+
+void destroyCluster(bool** cluster, int* sizes, int count) {
+
+    delete[] sizes;
+
+
+
+    for (int i = 0; i < count; i++) {
+        delete[] * (cluster + i);
+    }
+
+    delete[] cluster;
+
+}
+
+//---------------- VOID WALKER -----------------
+void processStream(unsigned char* stream) {
+}
+
+float calculateNecroticPower(const unsigned char* data, int numUnits, int targetID) {
+    return 0.0f;
 }
