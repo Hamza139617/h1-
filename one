@@ -3,7 +3,7 @@ using namespace std;
 
 void fillboard(int**& b, int N , int i = 0 );
 void queenPlacer(int**& b, int N, int i = 0 , int j = 0 );
-void queenValidator(int**& b,int N,int i,int j);
+bool queenValidator(int**& b,int N,int i,int j);
 
 
 int main() {
@@ -18,12 +18,14 @@ int main() {
     
     fillboard(board, N);
     
-    queenPlacer( b, N, i, j);
+    queenPlacer( board, N);
 
     
     for(int i = 0 ; i < N ; i++ ) {
         
         for(int j = 0 ; j < N ; j++ ) {
+            
+            
             
             cout << *(*(board + i ) + j ) << " ";
             
@@ -33,13 +35,42 @@ int main() {
         
     }
     
+    for(int i = 0 ; i < N ; i++ ) {
+        for
+    }
+    
     
     return 0;
 }
 
-void queenValidator(int**& b,int N,int i,int j) {
+bool queenValidator(int**& b,int N,int i,int j) {
     
+    if(j == 0 && i == 0 ) return true;
     
+    if(
+        (j > 0 && *(*(b + i ) + j - 1  ) == 0 )  &&
+        (i == 0 && *(*(b + i ) + j ) == 0 )
+        ) {
+            return true;
+        
+            
+        }else if(
+            (j > 0 && j < N - 1  ) && 
+            (i > 0 ) &&
+            (*(*(b + i ) + j ) == 0 && *(*(b + i ) + j - 1 ) == 0 ) &&
+            ( *(*(b + i - 1 ) + j ) == 0 && *(*(b + i - 1 ) + j - 1 ) == 0 ) && 
+            ( *(*(b + i - 1 ) + j + 1 ) == 0 )
+            ) {
+                return true;
+            }else if(
+                *(*(b + i ) + j - 1) == 0 &&
+                *(*(b + i - 1 ) + j ) == 0 &&
+                *(*(b + i - 1 ) + j - 1 ) == 0 
+                ) {
+                    return true;
+                }
+                
+                return false;
     
 }
 
@@ -57,7 +88,9 @@ void fillboard(int**& b, int N, int i ) {
 
 void queenPlacer(int**& b, int N, int i  , int j ) {
     
-    if(i == N ) return;
+    if(i == N ) {
+        return;
+    }
     
     if(j == N ) {
         
@@ -75,4 +108,6 @@ void queenPlacer(int**& b, int N, int i  , int j ) {
     j++;
     
     queenPlacer(b, N, i, j);
+
+    
 }
