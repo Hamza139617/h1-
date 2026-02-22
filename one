@@ -1,146 +1,147 @@
+#include "pch.h"
 #include <iostream>
 using namespace std;
 
-void fillboard(int**&, int, int = 0 ); // for creating and initializing a 2d pointer and utilizing heap
+void fillboard(int**&, int, int = 0); // for creating and initializing a 2d pointer and utilizing heap
 
-bool placeQueen(int**&, int N, int = 0 , int = 0); // for placing the queen
+bool placeQueen(int**&, int N, int = 0, int = 0); // for placing the queen
 
-bool validatePosition(int**&b, int N,int i,int j); // for checking if the position is proper for placing a queen 
+bool validatePosition(int**& b, int N, int i, int j); // for checking if the position is proper for placing a queen 
 
 int main() {
-    
+
     int N = 4;
-    
-    int** board = new int*[N];
-    
+
+    int** board = new int* [N];
+
     fillboard(board, N);
-    
+
     placeQueen(board, N);
-    
-    for(int i = 0  ; i < N ; i++ ) {
-        
-        for(int j = 0 ; j < N ;j++ ) {
-            
-            cout << *(*(board + i ) + j ) << " ";
+
+    for (int i = 0; i < N; i++) {
+
+        for (int j = 0; j < N; j++) {
+
+            cout << *(*(board + i) + j) << " ";
         }
-        
-        cout << endl ;
-        
-    } 
-    
+
+        cout << endl;
+
+    }
+
     return 0;
 }
 
-bool checkColum(int** b,int  i,int j) {
-    if(i == 0 ) return true;
-    
-    if(*(*(b + i ) + j ) == 1 ) return false;
-    
+bool checkColum(int** b, int  i, int j) {
+    if (i <= 0) return true;
+
+    if (*(*(b + i - 1 ) + j) == 1) return false;
+
     i--;
-    
+
     return checkColum(b, i, j);
 }
 
 
-bool checkUpperLeftDiagonal(int** b,int i,int j) {
-    
-    if(i <= 0 || j <= 0 ) return true;
-    
-    if(*(*(b + i ) + j ) == 1 ) return false;
-    
+bool checkUpperLeftDiagonal(int** b, int i, int j) {
+
+    if (i <= 0 || j <= 0) return true;
+
+    if (*(*(b + i - 1 ) + j - 1 ) == 1) return false;
+
     i--;
     j--;
-    
+
     return checkUpperLeftDiagonal(b, i, j);
-    
+
 }
 
-bool checkUpperRightDiagonal(int**b,int i,int j,int N) {
-    
-    if(i == 0 || j >= N ) return true;
-    
-    if(*(*(b + i ) + j ) == 1 ) return false;
-    
+bool checkUpperRightDiagonal(int** b, int i, int j, int N) {
+
+    if (i <= 0 || j >= N) return true;
+
+    if (*(*(b + i - 1 ) + j + 1 ) == 1) return false;
+
     i--;
     j++;
-    
+
     return checkUpperRightDiagonal(b, i, j, N);
-    
+
 }
 
-bool validatePosition(int**&b, int N,int i,int j) {
-    
-    if(checkColum(b, i, j) ) {
-        
-        if( checkUpperLeftDiagonal(b, i, j) ) {
-            
-            if( checkUpperRightDiagonal(b, i, j, N) ) {
-                
-                return true;    
-                
+bool validatePosition(int**& b, int N, int i, int j) {
+
+    if (checkColum(b, i  , j)) {
+
+        if (checkUpperLeftDiagonal(b, i  , j )) {
+
+            if (checkUpperRightDiagonal(b, i  , j  , N)) {
+
+                return true;
+
             }
-            
+
         }
-        
+
     }
-    
+
     return false;
-    
+
 }
 
-bool checkNextRow(int**& b,int N,int i, int j = 0 ) {
-    if(j == N ) return false;
-    
-    if(validatePosition(b, N, i, j )) return true;
-    
+bool checkNextRow(int**& b, int N, int i, int j = 0) {
+    if (j == N) return false;
+
+    if (validatePosition(b, N, i, j)) return true;
+
     j++;
-    
+
     return checkNextRow(b, N, i, j);
-    
-} 
 
-bool placeQueen(int**&b, int N, int i , int j   ) {
-    
-    if(j == N ) {
-         
-         return false;
-    
-    }
-    
-    if(i == N ) return true;
-    
-    
-    
-    if(validatePosition(b, N, i, j)) {
-     
-     *(*(b + i ) + j ) = 1;
-     
-     if(!(checkNextRow(b, N, i))) {
-         *(*(b + i ) + j ) = 0;
-     }
-     
-     return placeQueen(b, N, i + 1 , j);
-        
-    }
-    
-    
-    
-    
-    
-    j++;
-    
-    return placeQueen(b, N, i, j);
-    
 }
 
-void fillboard(int**& b, int N, int i ) {
-    
-    if(i == N ) return;
-    
-    *(b + i ) = new int[N]();
-    
+bool placeQueen(int**& b, int N, int i, int j) {
+
+    if (j == N) {
+
+        return false;
+
+    }
+
+    if (i == N) return true;
+
+
+
+    if (validatePosition(b, N, i, j)) {
+
+        *(*(b + i) + j) = 1;
+
+        if (!(checkNextRow(b, N, i))) {
+            *(*(b + i) + j) = 0;
+        }
+
+        return placeQueen(b, N, i + 1);
+
+    }
+
+
+
+
+
+    j++;
+
+    return placeQueen(b, N, i, j);
+
+}
+
+void fillboard(int**& b, int N, int i) {
+
+    if (i == N) return;
+
+    *(b + i) = new int[N]();
+
     i++;
-    
+
     fillboard(b, N, i);
-    
+
 }
